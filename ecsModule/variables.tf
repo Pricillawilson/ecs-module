@@ -28,3 +28,12 @@ variable "fargate_memory" {
   default     = "2048"
 }
 
+variable "aws_region" {
+  description = "The AWS region things are created in"
+  default     = "eu-west-2"
+}
+
+variable "ecr_repo_region" {
+  description = "Region where the image is present"
+  default = "eu-west-2"
+}

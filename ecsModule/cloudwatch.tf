@@ -1,38 +1,14 @@
+# Set up CloudWatch group and log stream and retain logs for 30 days
+resource "aws_cloudwatch_log_group" "app_log_group" {
+  name              = "/ecs/app"
+  retention_in_days = 30
 
-# CloudWatch alarm that triggers the autoscaling up policy
-resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
-  alarm_name          = "myapp_cpu_utilization_high"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/ECS"
-  period              = "60"
-  statistic           = "Average"
-  threshold           = "85"
-
-  dimensions = {
-    ClusterName = aws_ecs_cluster.ecs_cluster.name
-    ServiceName = aws_ecs_service.ecs_service.name
+  tags = {
+    Name = "cb-log-group"
   }
-
-  alarm_actions = [aws_appautoscaling_policy.up.arn]
 }
 
-# CloudWatch alarm that triggers the autoscaling down policy
-resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
-  alarm_name          = "myapp_cpu_utilization_low"
-  comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/ECS"
-  period              = "60"
-  statistic           = "Average"
-  threshold           = "10"
-
-  dimensions = {
-    ClusterName = aaws_ecs_cluster.ecs_cluster.name
-    ServiceName = aws_ecs_service.ecs_service.name
-  }
-
-  alarm_actions = [aws_appautoscaling_policy.down.arn]
+resource "aws_cloudwatch_log_stream" "app_log_stream" {
+  name           = "my-log-stream"
+  log_group_name = aws_cloudwatch_log_group.app_log_group.name
 }
